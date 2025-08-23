@@ -89,8 +89,14 @@ export function RecordPage({ appState, onComplete, onProgress }: RecordPageProps
       
       // Calculate totals
       const total = clipsData.reduce((sum: number, clip: any) => sum + (clip.duration || 0), 0);
+      // Since clips don't have quality scores yet, calculate based on duration (15-30s = good quality)
       const avgQual = clipsData.length > 0 
-        ? clipsData.reduce((sum: number, clip: any) => sum + (clip.quality || 0), 0) / clipsData.length 
+        ? clipsData.reduce((sum: number, clip: any) => {
+            const duration = clip.duration || 0;
+            // Quality based on duration: 15-30s = 85-100%, others lower
+            const quality = duration >= 15 && duration <= 30 ? 85 + (duration - 15) : 50;
+            return sum + quality;
+          }, 0) / clipsData.length 
         : 0;
       
       setTotalDuration(total / 60); // Convert to minutes

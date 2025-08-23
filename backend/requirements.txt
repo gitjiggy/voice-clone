@@ -16,3 +16,14 @@ aiofiles==23.2.1
 pyyaml==6.0.1
 torchaudio==2.1.0
 noisereduce==3.0.0
+# Real XTTS training dependencies
+trainer==0.0.32
+coqpit==0.0.17
+jieba==0.42.1
+pypinyin==0.47.1
+mecab-python3==1.0.6
+unidic-lite==1.0.8
+num2words==0.5.12
+inflect==7.0.0
+pandas==2.0.3
+matplotlib==3.7.2

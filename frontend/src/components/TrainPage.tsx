@@ -55,6 +55,8 @@ export function TrainPage({ appState, onComplete }: TrainPageProps) {
       } else if (status.status === 'completed') {
         setTrainingStatus(status);
         addLog('Training completed successfully!');
+        // Mark training as complete in app state
+        onComplete();
       }
     } catch (err) {
       console.error('Failed to check training status:', err);
@@ -184,21 +186,21 @@ export function TrainPage({ appState, onComplete }: TrainPageProps) {
     return { color: 'text-green-500', status: 'Normal' };
   };
 
-  const canStartTraining = appState.totalDuration >= 8;
+  const canStartTraining = appState.totalDuration >= 5;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="bg-card rounded-lg border p-6">
-        <h2 className="text-xl font-semibold mb-2">Step 3: Train AI Model</h2>
+        <h2 className="text-xl font-semibold mb-2">Step 3: Create Voice Profile</h2>
         <p className="text-muted-foreground">
-          Train your personalized voice model using advanced AI technology.
+          Create your personalized voice profile using advanced pre-trained models.
         </p>
       </div>
 
       {/* Training Prerequisites */}
       <div className="bg-card rounded-lg border p-6">
-        <h3 className="text-lg font-medium mb-4">Training Data Summary</h3>
+        <h3 className="text-lg font-medium mb-4">Voice Data Summary</h3>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 text-center">
@@ -226,7 +228,7 @@ export function TrainPage({ appState, onComplete }: TrainPageProps) {
         {!canStartTraining && (
           <div className="flex items-center gap-2 text-yellow-600 bg-yellow-50 dark:bg-yellow-950/20 p-3 rounded-lg mb-4">
             <AlertTriangle className="h-4 w-4" />
-            Need at least 8 minutes of audio for training. Please record more clips.
+            Need at least 5 minutes of audio for voice profile. Please record more clips.
           </div>
         )}
       </div>
@@ -271,7 +273,7 @@ export function TrainPage({ appState, onComplete }: TrainPageProps) {
             <div className="space-y-2">
               <h3 className="text-lg font-medium">Ready to Train</h3>
               <p className="text-muted-foreground">
-                This will create your personalized AI voice model using advanced deep learning.
+                This will create your personalized voice profile using advanced pre-trained models.
               </p>
             </div>
             
@@ -286,17 +288,17 @@ export function TrainPage({ appState, onComplete }: TrainPageProps) {
               )}
             >
               <Brain className="h-5 w-5" />
-              Start AI Training
+              Create Voice Profile
             </button>
           </div>
         ) : trainingStatus?.status === 'completed' ? (
           <div className="text-center space-y-4">
             <div className="flex items-center justify-center gap-2 text-green-600">
               <CheckCircle className="h-6 w-6" />
-              <h3 className="text-lg font-medium">Training Complete!</h3>
+              <h3 className="text-lg font-medium">Voice Profile Created!</h3>
             </div>
             <p className="text-muted-foreground">
-              Your AI voice model is ready. You can now generate speech with your cloned voice.
+              Your voice profile is ready. You can now generate speech with your personalized voice.
             </p>
           </div>
         ) : (

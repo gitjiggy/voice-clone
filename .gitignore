@@ -53,8 +53,7 @@ frontend/build/
 .env.production.local
 
 # Audio/Training Data (don't commit large files)
-data/raw/
-data/processed/
+
 models/voice_clone/
 outputs/
 logs/

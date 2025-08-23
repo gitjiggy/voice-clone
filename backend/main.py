@@ -17,8 +17,8 @@ import logging
 
 # Import our custom modules
 from audio_processor import AudioProcessor
-from voice_trainer import VoiceTrainer
-from voice_synthesizer import VoiceSynthesizer
+from voice_trainer_pretrained import PretrainedVoiceTrainer
+from voice_synthesizer_pretrained import PretrainedVoiceSynthesizer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -45,10 +45,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize components
+# Initialize components with pre-trained fallback
 audio_processor = AudioProcessor()
-voice_trainer = VoiceTrainer()
-voice_synthesizer = VoiceSynthesizer()
+voice_trainer = PretrainedVoiceTrainer()
+voice_synthesizer = PretrainedVoiceSynthesizer()
 
 # Base path for the project
 BASE_PATH = Path("/Users/nirajdesai/Documents/AI/voice-clone")

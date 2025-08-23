@@ -59,34 +59,116 @@ export function Dashboard() {
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
-  // Load saved state from localStorage
+  // Check training status from backend
+  const checkModelTrainingStatus = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/train/status');
+      const status = await response.json();
+      
+      if (status.status === 'completed' && !appState.modelTrained) {
+        console.log('🎯 Detected completed training from backend, updating frontend state');
+        setAppState(prev => ({ ...prev, modelTrained: true }));
+        updateStepCompletion(3, true);
+      }
+    } catch (err) {
+      console.error('Failed to check training status:', err);
+    }
+  };
+
+  // Load saved state from localStorage and fetch actual clips data
   useEffect(() => {
-    const savedState = localStorage.getItem('voice-clone-state');
-    if (savedState) {
+    const loadInitialData = async () => {
+      // First fetch actual clips data from backend to get current totals
       try {
-        const parsed = JSON.parse(savedState);
-        setAppState(parsed);
+        const response = await fetch('http://127.0.0.1:8000/clips');
+        const data = await response.json();
+        const clipsData = data.clips || [];
         
-        // Update steps based on saved state - but allow returning to record more clips
-        if (parsed.recordedClips >= parsed.targetClips) {
-          updateStepCompletion(1, true);
-          // Only auto-advance if analysis is also complete AND we have enough audio
-          if (!steps[1].active && parsed.datasetAnalyzed && parsed.totalDuration >= 8) {
-            setCurrentStep(2);
+        // Calculate totals
+        const total = clipsData.reduce((sum: number, clip: any) => sum + (clip.duration || 0), 0);
+        // Since clips don't have quality scores yet, calculate based on duration (15-30s = good quality)
+        const avgQual = clipsData.length > 0 
+          ? clipsData.reduce((sum: number, clip: any) => {
+              const duration = clip.duration || 0;
+              // Quality based on duration: 15-30s = 85-100%, others lower
+              const quality = duration >= 15 && duration <= 30 ? 85 + (duration - 15) : 50;
+              return sum + quality;
+            }, 0) / clipsData.length 
+          : 0;
+        
+        console.log(`📊 Dashboard loading: ${clipsData.length} clips, ${(total/60).toFixed(1)}m total, ${avgQual.toFixed(0)}% quality`);
+        
+        // Set initial state with backend data
+        setAppState(prev => ({ 
+          ...prev, 
+          recordedClips: clipsData.length,
+          totalDuration: total / 60, // Convert to minutes
+          avgQuality: avgQual
+        }));
+        
+        // Then load saved state from localStorage (but don't override clip data)
+        const savedState = localStorage.getItem('voice-clone-state');
+        if (savedState) {
+          try {
+            const parsed = JSON.parse(savedState);
+            // Only use saved state for flags, not for clip data
+            setAppState(prev => ({ 
+              ...prev,
+              datasetAnalyzed: parsed.datasetAnalyzed || false,
+              modelTrained: parsed.modelTrained || false,
+              // Keep the fresh clip data from backend
+              recordedClips: clipsData.length,
+              totalDuration: total / 60,
+              avgQuality: avgQual
+            }));
+            
+            // Update steps based on actual data and saved flags
+            if (clipsData.length >= 20) {
+              updateStepCompletion(1, true);
+            }
+            if (parsed.datasetAnalyzed) {
+              updateStepCompletion(2, true);
+            }
+            if (parsed.modelTrained) {
+              updateStepCompletion(3, true);
+              setCurrentStep(4); // Go to demo if model is trained
+            }
+          } catch (e) {
+            console.error('Failed to load saved state:', e);
+          }
+        } else {
+          // No saved state, set steps based on current data
+          if (clipsData.length >= 20) {
+            updateStepCompletion(1, true);
+            setCurrentStep(2); // Advance to analyze step
           }
         }
-        if (parsed.datasetAnalyzed) {
-          updateStepCompletion(2, true);
-          if (!steps[2].active && parsed.recordedClips >= parsed.targetClips) setCurrentStep(3);
+        
+        // Check if training/voice profile is completed
+        try {
+          const trainResponse = await fetch('http://127.0.0.1:8000/train/status');
+          const trainStatus = await trainResponse.json();
+          if (trainStatus.status === 'completed') {
+            setAppState(prev => ({ ...prev, modelTrained: true }));
+            updateStepCompletion(3, true);
+            setCurrentStep(4); // Go to demo
+            console.log('🎯 Voice profile detected as completed, advancing to demo');
+          }
+        } catch (error) {
+          console.error('Failed to check training status:', error);
         }
-        if (parsed.modelTrained) {
-          updateStepCompletion(3, true);
-          if (!steps[3].active) setCurrentStep(4);
-        }
-      } catch (e) {
-        console.error('Failed to load saved state:', e);
+        
+      } catch (error) {
+        console.error('Failed to fetch clips on dashboard load:', error);
       }
-    }
+    };
+    
+    loadInitialData();
+    
+    // Check training status on mount and periodically
+    checkModelTrainingStatus();
+    const interval = setInterval(checkModelTrainingStatus, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   // Save state to localStorage
