@@ -1,0 +1,32 @@
+# Voice Cloning Recording Prompts
+# Optimized for high-quality voice synthesis training
+# Record each phrase clearly with consistent tone and pace
+
+1. The quick brown fox jumps over the lazy dog near the riverbank.
+2. Machine learning algorithms require substantial computational resources and careful optimization.
+3. Natural language processing enables computers to understand human communication patterns effectively.
+4. Artificial intelligence systems can analyze complex data patterns with remarkable accuracy.
+5. Deep neural networks learn hierarchical representations through backpropagation training methods.
+6. Voice synthesis technology has advanced significantly with modern transformer architectures.
+7. Hello, my name is [Your Name] and I'm creating a personalized voice model today.
+8. Please record this sentence with your natural speaking voice and clear pronunciation.
+9. The weather forecast predicts sunny skies with temperatures reaching seventy-five degrees.
+10. Scientific research demonstrates the importance of diverse training data for robust models.
+11. Technology companies invest billions of dollars in artificial intelligence research annually.
+12. Sustainable energy solutions require innovative approaches to environmental challenges worldwide.
+13. Educational institutions adapt curriculum to include computational thinking and digital literacy.
+14. Healthcare professionals utilize electronic medical records to improve patient care quality.
+15. Global communication networks enable real-time collaboration across international boundaries.
+16. Software development practices emphasize code quality, testing, and maintainable architecture.
+17. Data privacy regulations protect individual rights in our increasingly connected society.
+18. Climate change mitigation strategies focus on renewable energy and emission reductions.
+19. Economic markets fluctuate based on supply, demand, and investor sentiment analysis.
+20. Innovation drives technological progress through research, development, and creative problem-solving.
+
+# Recording Instructions:
+# - Use a quiet environment with minimal background noise
+# - Maintain consistent distance from microphone (6-8 inches)
+# - Speak at normal conversational pace
+# - Pause 2-3 seconds between each phrase
+# - Record in high quality (44.1kHz, 16-bit minimum)
+# - Save each phrase as a separate WAV file named prompt_01.wav, prompt_02.wav, etc.
