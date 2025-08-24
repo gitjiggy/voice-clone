@@ -92,8 +92,8 @@ class PretrainedVoiceSynthesizer:
             if not text or len(text.strip()) == 0:
                 raise Exception("Text cannot be empty")
             
-            if len(text) > 500:
-                text = text[:500]  # Limit text length
+            if len(text) > 1000:
+                text = text[:1000]  # Limit text length
             
             logger.info(f"🎤 Synthesizing with voice profile: '{text[:50]}{'...' if len(text) > 50 else ''}'")
             

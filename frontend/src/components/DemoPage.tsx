@@ -34,8 +34,8 @@ export function DemoPage({ appState }: DemoPageProps) {
       return;
     }
 
-    if (text.length > 200) {
-      setError('Text is too long. Please keep it under 200 characters.');
+    if (text.length > 1000) {
+      setError('Text is too long. Please keep it under 1000 characters.');
       return;
     }
 
@@ -169,11 +169,11 @@ export function DemoPage({ appState }: DemoPageProps) {
           <div className="flex justify-between items-center">
             <label className="text-sm font-medium">Enter your text:</label>
             <span className={cn("text-xs", 
-              text.length > 200 ? "text-red-500" : 
-              text.length > 160 ? "text-yellow-500" : 
+              text.length > 1000 ? "text-red-500" : 
+              text.length > 800 ? "text-yellow-500" : 
               "text-muted-foreground"
             )}>
-              {text.length}/200 characters
+              {text.length}/1000 characters
             </span>
           </div>
           
